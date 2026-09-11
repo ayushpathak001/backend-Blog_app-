@@ -62,3 +62,14 @@ async def register(user_info: User):
 
     return created_user
 
+
+
+
+
+@router.get("/test-db")
+async def test_db():
+    try:
+        result = await db.command("ping")
+        return {"message": "MongoDB connected", "result": result}
+    except Exception as e:
+        return {"message": "MongoDB connection failed", "error": str(e)}
