@@ -6,7 +6,7 @@ import secrets
 from send_email import send_registeration_mail
 
 router = APIRouter(
-    tags= ["User Routes"]
+    tags= ["Register user"]
 )
 
 

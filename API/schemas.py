@@ -80,3 +80,7 @@ class UserResponse(BaseModel):
 
 
 
+
+
+class Token_data(BaseModel):
+    id : str 
