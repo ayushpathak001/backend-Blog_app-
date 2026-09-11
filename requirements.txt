@@ -6,3 +6,6 @@ motor
 
 pip install bcrypt==4.0.1
 pip install passlib==1.7.4
+
+pip install fastapi-mail
+pip install python-multipart

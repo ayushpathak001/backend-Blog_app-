@@ -3,7 +3,7 @@ from schemas import User , db , UserResponse
 from fastapi.encoders import jsonable_encoder
 from utils import get_password_hash
 import secrets
-
+from send_email import send_registeration_mail
 
 router = APIRouter(
     tags= ["User Routes"]
@@ -60,16 +60,19 @@ async def register(user_info: User):
         {"_id": new_user.inserted_id}
     )
 
+    try:
+        await send_registeration_mail(
+            subject="Welcome to My Blog 🎉",
+            email_to=created_user["email"],
+            body={
+                "name": created_user["name"],
+                "email": created_user["email"],
+            }
+        )
+    except Exception as e:
+        print("Email sending failed:", e)
+
     return created_user
 
 
 
-
-
-@router.get("/test-db")
-async def test_db():
-    try:
-        result = await db.command("ping")
-        return {"message": "MongoDB connected", "result": result}
-    except Exception as e:
-        return {"message": "MongoDB connection failed", "error": str(e)}
