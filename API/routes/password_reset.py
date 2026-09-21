@@ -1,8 +1,11 @@
 from fastapi import APIRouter, HTTPException , status
 from utils import get_password_hash
 from oauth2 import create_access_token, get_user_from_reset_token
+from oauth2 import create_access_token, get_user_from_reset_token
 from schemas import NewPassword, PasswordReset , db
 from send_email import password_reset
+from bson import ObjectId
+from fastapi import HTTPException
 
 
 router = APIRouter(
@@ -15,7 +18,7 @@ async def reset_request(user_email : PasswordReset ):
     user = await db["users"].find_one({"email" :user_email.email})
 
     if user is not None:
-        token = create_access_token({"id" : str(user["_id"])})
+        token = create_access_token({"sub": str(user["_id"])})
 
         reset_link = f"http://localhost:8000/?token={token}"
 
@@ -38,17 +41,35 @@ async def reset_request(user_email : PasswordReset ):
 
 
 
+
 @router.post("/reset", response_description="Reset Password")
 async def reset(
     token: str,
-    new_passsword: NewPassword
+    new_password: NewPassword
 ):
+    user_id = await get_user_from_reset_token(token)
 
-    user = await get_user_from_reset_token(token)
+    try:
+        user_object_id = ObjectId(user_id)
+    except Exception:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid reset token"
+        )
+
+    user = await db["users"].find_one(
+        {"_id": user_object_id}
+    )
+
+    if not user:
+        raise HTTPException(
+            status_code=404,
+            detail="User not found"
+        )
 
     request_data = {
         k: v
-        for k, v in new_passsword.dict().items()
+        for k, v in new_password.dict().items()
         if v is not None
     }
 
@@ -63,19 +84,9 @@ async def reset(
     )
 
     if update_result.modified_count == 1:
+        return { "message": "Password reset successfully" }
 
-        updated_user = await db["users"].find_one(
-            {"_id": user["_id"]}
-        )
+        
 
-        return updated_user
+    raise HTTPException( status_code=400, detail="Password was not changed" )
 
-    raise HTTPException(
-        status_code=404,
-        detail="User information not found on the server"
-    )
-
-
-
-
-    
