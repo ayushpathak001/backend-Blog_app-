@@ -1,6 +1,5 @@
 from fastapi import FastAPI
-from routes import auth , users
-
+from routes import auth , users , password_reset
 
 
 app = FastAPI()
@@ -15,6 +14,8 @@ def read_root():
 
 app.include_router(users.router)
 app.include_router(auth.router)
+app.include_router(password_reset.router)
+
 
 
 

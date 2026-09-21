@@ -1,4 +1,5 @@
-import os 
+import os
+from typing import Dict 
 from fastapi_mail import FastMail , MessageSchema , ConnectionConfig
 from dotenv import load_dotenv
 
@@ -46,3 +47,16 @@ async def send_registeration_mail(subject : str , email_to : str , body : dict):
     print("✅ Email sent successfully!")
 
 
+
+
+async def password_reset(subject : str , email_to : str , body : Dict):
+    message = MessageSchema(
+            subject=subject , 
+            recipients=[email_to] ,
+            template_body=body,
+            subtype="html"
+        )
+    
+
+    fm = FastMail(conf)
+    await fm.send_message(message=message , template_name="password_reset.html")

@@ -84,3 +84,11 @@ class UserResponse(BaseModel):
 
 class Token_data(BaseModel):
     id : str 
+
+
+class PasswordReset(BaseModel):
+    email : EmailStr
+
+
+class NewPassword(BaseModel):
+    password : str
