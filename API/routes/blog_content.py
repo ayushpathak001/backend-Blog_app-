@@ -1,7 +1,8 @@
+from json import JSONDecoder
 from typing import List
 
 from bson import ObjectId
-from fastapi import APIRouter, Depends, HTTPException , status
+from fastapi import APIRouter, Depends, HTTPException, Response , status
 from fastapi.encoders import jsonable_encoder
 
 from oauth2 import get_current_user
@@ -98,4 +99,136 @@ async def get_blogs(
         )
 
 
-    
+
+
+
+@router.put(
+    "/{id}",
+    response_description="Update blog content",
+    response_model=BlogContentResponse
+)
+async def update_blog(
+    id: str,
+    blog_content: BlogContent,
+    current_user=Depends(get_current_user)
+):
+    try:
+        # Convert string ID from URL into MongoDB ObjectId
+        blog_id = ObjectId(id)
+
+        # Find the blog post
+        blog_post = await db["blogPost"].find_one(
+            {"_id": blog_id}
+        )
+
+        if blog_post is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Blog content not found."
+            )
+
+        # Check whether current user is the author
+        if blog_post["author_id"] != str(current_user["_id"]):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="You are not the author of this blog post"
+            )
+
+        # Remove fields whose value is None
+        blog_content = {
+            k: v
+            for k, v in blog_content.model_dump().items()
+            if v is not None
+        }
+
+        if len(blog_content) == 0:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="No data provided for update"
+            )
+
+        # Update blog
+        update_result = await db["blogPost"].update_one(
+            {"_id": blog_id},
+            {"$set": blog_content}
+        )
+
+        # Get updated blog
+        updated_blog_post = await db["blogPost"].find_one(
+            {"_id": blog_id}
+        )
+
+        return updated_blog_post
+
+    except ValueError:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid blog ID"
+        )
+
+    except HTTPException:
+        raise
+
+    except Exception as e:
+        print("ERROR:", e)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal server error"
+        )
+
+ 
+
+
+@router.delete(
+    "/{id}",
+    response_description="Delete blog post"
+)
+async def delete_blog_post(
+    id: str,
+    current_user=Depends(get_current_user)
+):
+    try:
+        blog_id = ObjectId(id)
+
+        # Find blog post
+        blog_post = await db["blogPost"].find_one(
+            {"_id": blog_id}
+        )
+
+        if blog_post is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Blog content not found"
+            )
+
+        # Check author
+        if blog_post["author_id"] != str(current_user["_id"]):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="You are not the author of this blog post"
+            )
+
+        # Delete blog
+        delete_result = await db["blogPost"].delete_one(
+            {"_id": blog_id}
+        )
+
+        if delete_result.deleted_count == 1:
+            return Response(
+                status_code=status.HTTP_204_NO_CONTENT
+            )
+
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal server error"
+        )
+
+    except HTTPException:
+        raise
+
+    except Exception as e:
+        print("ERROR:", e)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal server error"
+        )
