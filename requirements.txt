@@ -1,25 +1,15 @@
-"fastapi[standard]"
-"uvicorn[standard]"
-"pymongo[srv]==3.12" # this is for mongo db 
-dotenv
+fastapi[standard]
+uvicorn[standard]
+
+pymongo[srv]==3.12
 motor
 
-pip install bcrypt==4.0.1
-pip install passlib==1.7.4
+python-dotenv
+python-multipart
 
-pip install fastapi-mail
-pip install python-multipart
-pip install "passlib[bcrypt]"
-pip install "python-jose[cryptography]"
+bcrypt==4.0.1
+passlib==1.7.4
+passlib[bcrypt]
 
-
-fastapi
-uvicorn
-motor
-pymongo
-pydantic
-python-jose
-passlib
-bcrypt
+python-jose[cryptography]
 fastapi-mail
-
