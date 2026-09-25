@@ -92,3 +92,43 @@ class PasswordReset(BaseModel):
 
 class NewPassword(BaseModel):
     password : str
+
+
+
+class BlogContentResponse(BaseModel):
+    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    title : str = Field(...)
+    body : str = Field(...)
+    author_name : str = Field(...)
+    author_id : str = Field(...)
+    created_at : str = Field(...)
+
+    model_config = ConfigDict(
+            populate_by_name=True,
+            arbitrary_types_allowed=True,
+            json_schema_extra={
+                "example": {
+                    "title": "Blog title",
+                    "body": "body content" , 
+                    "author_name" : "name of the author" ,
+                    "author_id" : "id of the author" ,
+                    "created_at" : "date when it created"
+                }
+            }
+        )
+
+
+    
+
+class BlogContent(BaseModel):
+    title: str
+    body: str
+
+    model_config = ConfigDict(
+        json_schema_extra={
+            "example": {
+                "title": "Blog title",
+                "body": "body content"
+            }
+        }
+    )

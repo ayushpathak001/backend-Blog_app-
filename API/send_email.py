@@ -60,3 +60,8 @@ async def password_reset(subject : str , email_to : str , body : Dict):
 
     fm = FastMail(conf)
     await fm.send_message(message=message , template_name="password_reset.html")
+
+
+
+
+    
