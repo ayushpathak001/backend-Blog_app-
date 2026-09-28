@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-```
+
 <title>Welcome to My Blog</title>
 
 <style>
@@ -165,96 +165,98 @@
         }
     }
 </style>
-```
+
 
 </head>
 
 <body>
 
-```
 <div class="wrapper">
 
-    <div class="container">
+<div class="container">
 
-        <!-- Header -->
-        <div class="header">
+    <!-- Header -->
+    <div class="header">
 
-            <div class="logo">
-                ✍️
-            </div>
-
-            <h1>Welcome to My Blog</h1>
-
-            <p>
-                Your journey of reading, writing and sharing ideas starts here.
-            </p>
-
+        <div class="logo">
+            ✍️
         </div>
 
+        <h1>Welcome to My Blog</h1>
 
-        <!-- Main Content -->
-        <div class="content">
+        <p>
+            Your journey of reading, writing and sharing ideas starts here.
+        </p>
 
-            <h2>Hey {{ name }}! 👋</h2>
-
-            <p>
-                We're excited to have you here.
-                Your account has been successfully created and you're now
-                officially part of our community.
-            </p>
-
-            <p>
-                Start exploring interesting stories, share your thoughts,
-                and maybe even publish something of your own.
-            </p>
+    </div>
 
 
-            <!-- User Information -->
-            <div class="user-card">
+    <!-- Main Content -->
+    <div class="content">
 
-                <div class="user-row">
-                    <span class="label">Name:</span>
-                    <span class="value">{{ name }}</span>
-                </div>
+        <h2>Hey {{ name }}! 👋</h2>
 
-                <div class="user-row">
-                    <span class="label">Email:</span>
-                    <span class="value">{{ email }}</span>
-                </div>
+        <p>
+            We're excited to have you here.
+            Your account has been successfully created and you're now
+            officially part of our community.
+        </p>
 
+        <p>
+            Start exploring interesting stories, share your thoughts,
+            and maybe even publish something of your own.
+        </p>
+
+
+        <!-- User Information -->
+        <div class="user-card">
+
+            <div class="user-row">
+                <span class="label">Name:</span>
+                <span class="value">{{ name }}</span>
             </div>
 
-
-            <!-- Button -->
-            <div class="button-wrapper">
-
-                <a href="#" class="button">
-                    Start Exploring →
-                </a>
-
+            <div class="user-row">
+                <span class="label">Email:</span>
+                <span class="value">{{ email }}</span>
             </div>
 
         </div>
 
 
-        <!-- Footer -->
-        <div class="footer">
+        <!-- Button -->
+        <div class="button-wrapper">
 
-            <p>
-                You received this email because an account was created
-                using <strong>{{ email }}</strong>.
-            </p>
-
-            <p>
-                © 2026 My Blog. All rights reserved.
-            </p>
+            <a
+                href="https://blog-frontend-eosin-two.vercel.app/"
+                class="button"
+            >
+                Start Exploring →
+            </a>
 
         </div>
 
     </div>
 
+
+    <!-- Footer -->
+    <div class="footer">
+
+        <p>
+            You received this email because an account was created
+            using <strong>{{ email }}</strong>.
+        </p>
+
+        <p>
+            © 2026 My Blog. All rights reserved.
+        </p>
+
+    </div>
+
 </div>
-```
+
+
+</div>
 
 </body>
 </html>
